@@ -1,0 +1,48 @@
+{
+	"compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "/api/*": ["api/*"],
+      "/store/*": ["store/*"],
+      "/pages/*": ["pages/*"],
+      "/utils/*": ["utils/*"],
+      "/static/*": ["static/*"],
+      "/components/*": ["components/*"]
+    },
+    "target": "ES2020",
+		"module": "ESNext",
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    /* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "preserve",
+		"jsxImportSource": "vue",
+    /* Linting */
+		"strict": true, 
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+    "noImplicitAny":false,
+    "noImplicitThis":false,
+    // "types": [
+    //   // 主要是这个@dcloudio/types依赖要安装，才会有代码提示
+    //   "@dcloudio/types",
+    //   "@uni-helper/uni-app-types",
+    //   "@uni-helper/uni-ui-types",
+    //   "@types/uni-app",
+    //   "@types/html5plus"
+    // ]
+	},
+	"include": [
+    "pages/**/*.ts", "pages/**/*.tsx", "pages/**/*.vue",
+    "api/**/*.ts","utils/**/*.ts", "utils/**/*.tsx",
+    "components/**/*.ts", "components/**/*.tsx", "components/**/*.vue",
+    "App.vue"
+  ],
+  "exclude": ["node_modules","unpackage","uni_modules","static"]
+}

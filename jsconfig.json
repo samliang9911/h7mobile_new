@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "/api/*": ["api/*"],
+      "/store/*": ["store/*"],
+      "/pages/*": ["pages/*"],
+      "/utils/*": ["utils/*"],
+      "/static/*": ["static/*"],
+      "/components/*": ["components/*"],
+    },
+    "lib": [
+			"esnext",
+			"dom"
+		],
+    "types": [
+      // 主要是这个@dcloudio/types依赖要安装，才会有代码提示
+      "@dcloudio/types",
+      "@uni-helper/uni-app-types",
+      "@uni-helper/uni-ui-types",
+      "@types/uni-app",
+      "@types/html5plus"
+    ]
+  },
+  "exclude": [
+		"node_modules",
+		"unpackage",
+	]
+}

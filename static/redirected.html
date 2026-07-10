@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form method="POST" target="_self" style="display: none;"></form>
+  <script>
+    const form = document.querySelector('form');
+    let params = {}
+    try {
+      params = JSON.parse(decodeURIComponent(window.location.hash.substring(1)))
+    } catch (e) {
+      console.error("解析哈希参数失败", e);
+    }
+    form.action = params['_action']
+    delete params['_action']
+    for (let x in params) {
+      let opt = document.createElement("textarea")
+      opt.name = x
+      opt.value = params[x]
+      form.appendChild(opt)
+    }
+    form.submit()
+  </script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+{
+
+	"easycom": {
+		"autoscan": true,
+		// 注意一定要放在custom里，否则无效，https://ask.dcloud.net.cn/question/131175
+		"custom": {
+			"^u--(.*)": "uview-plus/components/u-$1/u-$1.vue",
+			"^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+			"^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue",
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/Guide/splash",
+			"style": {
+				"navigationBarTitleText": "综合管理系统-H7",
+				"navigationStyle": "custom", //顶部栏透明
+				"enablePullDownRefresh": false //下拉刷新
+			}
+		},
+		{
+			"path": "pages/Guide/Guide",
+			"style": {
+				"navigationBarTitleText": "引导页",
+				"navigationStyle": "custom", //顶部栏透明
+				"enablePullDownRefresh": false //下拉刷新
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "综合管理系统-H7",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom" //顶部栏透明
+			}
+
+		},
+		{
+			"path": "pages/index/items",
+			"style": {
+				"navigationBarTitleText": "事项",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationStyle": "custom", //顶部栏透明
+				"onReachBottomDistance": 80, //上拉触底
+				"enablePullDownRefresh": false //下拉刷新
+			}
+		},
+		{
+			"path": "pages/index/func",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "功能",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/index/home",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/index/dashboard",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "仪表盘",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/index/user",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "用户",
+				"enablePullDownRefresh": false
+			}
+		}
+
+	],
+
+
+
+	"subPackages": [{
+			"root": "pages/subPackages/user",
+			"pages": [{
+					"path": "personalInfo",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "个人信息",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "signature",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "签名",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "about",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "关于我们",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "agreement",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "协议",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/subPackages/user-personalInfo",
+			"pages": [{
+				"path": "userDataUpdate",
+				"style": {
+					"navigationStyle": "custom",
+					"navigationBarTitleText": "修改个人信息",
+					"enablePullDownRefresh": false
+				}
+			}]
+		},
+		{
+			"root": "pages/subPackages/form",
+			"pages": [{
+					"path": "form",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "事项表详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "time-line",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "事项流程时间线",
+						"enablePullDownRefresh": false
+					}
+
+				},
+				{
+					"path": "popupWindows",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "事项表弹出窗",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "addPeople",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "增加人",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "file",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "事项表文件",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "accessory",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "在线预览文件",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/subPackages/publicform/",
+			"pages": [{
+				"path": "publicChoicePerson",
+				"style": {
+					"navigationStyle": "custom",
+					"navigationBarTitleText": "综合管理系统-H7",
+					"enablePullDownRefresh": false,
+					"app-plus": {
+						"bounce": "none"
+					}
+				}
+			}]
+
+		},
+		{
+			"root": "pages/subPackages/autopage/",
+			"pages": [{
+				"path": "index",
+				"style": {
+					"navigationStyle": "custom",
+					"enablePullDownRefresh": false,
+					"app-plus": {
+						"bounce": "none"
+					}
+				}
+			}]
+		},
+		{
+			"root": "pages/subPackages/expense/",
+			"pages": [{
+				"path": "index",
+				"style": {
+					"navigationStyle": "custom",
+					"navigationBarTitleText": "",
+					"enablePullDownRefresh": false,
+					"app-plus": {
+						"bounce": "none"
+					}
+				}
+			}]
+		},
+		{
+			"root": "pages/subPackages/expense/detail",
+			"pages": [{
+				"path": "rotateTable",
+				"style": {
+					"navigationStyle": "custom",
+					"navigationBarTitleText": "",
+					"pageOrientation": "landscape", // 横屏显示
+					"enablePullDownRefresh": false,
+					"app-plus": {
+						"bounce": "none"
+					}
+				}
+			}]
+		}
+	],
+
+
+
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+
+
+	"tabBar": {
+		"selectedColor": "#515151",
+		"color": "#71716f",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "black",
+		"position": "bottom",
+		// "fontSize": "32rpx",
+		// "iconWidth": "30px",
+		"midButton": {
+			"iconPath": "/static/tabbar/logo.png",
+			"width": "60px",
+			"height": "65px",
+			"iconWidth": "40px"
+		},
+		"list": [{
+			"pagePath": "pages/index/items",
+			"iconPath": "static/tabbar/sx.png",
+			"selectedIconPath": "static/tabbar/sx-h.png",
+			"text": "事项"
+		}, {
+			"pagePath": "pages/index/func",
+			"iconPath": "static/tabbar/gn.png",
+			"selectedIconPath": "static/tabbar/gn-h.png",
+			"text": "功能"
+		}, {
+			"pagePath": "pages/index/home",
+			"iconPath": "static/tabbar/logo.png",
+			"text": "首页"
+			// "visible": false
+		}, {
+			"pagePath": "pages/index/dashboard",
+			"iconPath": "static/tabbar/ybp.png",
+			"selectedIconPath": "static/tabbar/ybp-h.png",
+			"text": "仪表盘"
+		}, {
+			"pagePath": "pages/index/user",
+			"iconPath": "static/tabbar/wd.png",
+			"selectedIconPath": "static/tabbar/wd-h.png",
+			"text": "我的"
+		}]
+	}
+}

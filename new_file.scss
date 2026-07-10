@@ -1,0 +1,170 @@
+
+	@import "uview-plus/index.scss";
+	@font-face {
+		font-family: 'PingFang-SC-Regular';
+		src: url("https://www.pcm77.com/font/h7_App/H5/PingFang SC Regular.ttf");
+	}
+
+	body,
+	html,
+	input,
+	view,
+	textarea,
+	text {
+		font-family: PingFang-SC-Regular;
+	}
+
+
+	// 网络加载样式
+	.uni-toast {
+		background: transparent;
+		color: #33333396;
+	}
+
+	.icon {
+		width: 1em;
+		height: 1em;
+		vertical-align: -0.15em;
+		fill: currentColor;
+		overflow: hidden;
+	}
+
+	.uni-modal {
+		z-index: 10077;
+	}
+	
+	// 开启会导致性别选择器会被覆盖
+	// .uni-mask {
+	// 	z-index: 10076;
+	// }
+
+	uni-modal {
+		z-index: 10078;
+	}
+
+	.backg {
+		background-color: #4395ff !important;
+	}
+
+	.naviColor {
+		background-color: #4395ff !important;
+	}
+
+	.writtenWords {
+		//文字两行自动省略
+		word-break: break-all;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		/* 这里是超出几行省略 */
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		line-height: 40rpx;
+	}
+
+	.Q_loading_Box {
+		background-color: transparent;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+		position: fixed;
+		top: 0;
+		width: 100%;
+
+		.Q_loading {
+			position: relative;
+			width: 100%;
+			left: 43%;
+			&::before {
+				width: 32rpx;
+				height: 32rpx;
+				border-radius: 32rpx;
+				background: blue;
+				content: '';
+				position: absolute;
+				background: #9b59b6;
+				animation: loading_before 1.5s infinite ease-in-out;
+			}
+
+			&::after {
+				width: 32rpx;
+				height: 32rpx;
+				border-radius: 32rpx;
+				background: blue;
+				content: '';
+				position: absolute;
+				background: #2ecc71;
+				left: 44rpx;
+				animation: loading_after 1.5s infinite ease-in-out;
+			}
+
+			@keyframes loading_before {
+				0% {
+					transform: translateX(0rpx) rotate(0deg)
+				}
+
+				50% {
+					transform: translateX(100rpx) scale(1.2) rotate(260deg);
+					background: #2ecc71;
+					border-radius: 0rpx;
+				}
+
+				100% {
+					transform: translateX(0rpx)rotate(0deg);
+				}
+			}
+
+			@keyframes loading_after {
+				0% {
+					transform: translateX(0rpx)
+				}
+
+				50% {
+					transform: translateX(-100rpx) scale(1.2) rotate(-260deg);
+					background: #9b59b6;
+					border-radius: 0rpx;
+				}
+
+				100% {
+					transform: translateX(0rpx);
+				}
+			}
+		}
+	}
+
+	.Q_shake:hover {
+		animation: Q_shake 800ms ease-in-out;
+		background: radial-gradient(rgba(0, 0, 0, 0.03), transparent);
+		color: DarkGray;
+		border-radius: 10px;
+		transition: .3s ease-in-out;
+	}
+
+	@keyframes Q_shake {
+
+		/* 垂直抖动，核心代码 */
+		10%,
+		90% {
+			transform: translate3d(0, -1px, 0);
+		}
+
+		20%,
+		80% {
+			transform: translate3d(0, +2px, 0);
+		}
+
+		30%,
+		70% {
+			transform: translate3d(0, -4px, 0);
+		}
+
+		40%,
+		60% {
+			transform: translate3d(0, +4px, 0);
+		}
+
+		50% {
+			transform: translate3d(0, -4px, 0);
+		}
+	}
