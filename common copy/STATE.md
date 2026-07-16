@@ -64,13 +64,33 @@
 
 ### 选人页（publicChoicePerson）
 - **职责**：人员/单位/部门/岗位多选（radio/checkbox/fcheck）。
-- **关键接口**：`onLoad(Type,Choose)`；批次查 `Sys_User/Sys_Organize/Sys_Post`；`getOpenerEventChannel().on('acceptDataFromOpener')` 回显；`confirmSelection` → `eventChannel.emit('acceptDataFromChild', result)` + `navigateBack`。
-- **约束（现状坑）**：新页面事件名 `acceptDataFromChild/acceptDataFromOpener`，与现有调用方（`popupWindows.vue`/`chooseFrame.vue` 的 `ChoicePerson/echoChoicePerson`）**不兼容**。
+- **关键接口**：`onLoad(Type,Choose)`；批次查 `Sys_User/Sys_Organize/Sys_Post`；`confirmSelection` 双发回传——新契约 `{data:[...实体], mergeData:{字段:[值数组]}}` via `acceptDataFromChild` + 兼容旧契约纯数组 via `ChoicePerson`；回显双监听 `acceptDataFromOpener` + `echoChoicePerson`（复用同一 handler）；`navigateBack`。
+- **契约基线**：对齐 PC 端 A 的 `{data, mergeData}`（全字段列转置，null→`''`，radio 不做单值特例）。`choosePage` 控件注册子页 `acceptDataFromChild`、消费 `mergeData[returnValueField[i].split('.').pop()].join(',')` 写回 `formData[storedValueField[i]]`、`success` 按 OID/UOID 锚点 `emit('acceptDataFromOpener',{items})` 回显；`onChangeBefore` 的 `data` 仍透传数组给自定义代码。`audit.vue` 取 `(data&&data.data)||data` 兼容。
+- **兼容层（待迁移后移除）**：`ChoicePerson`/`echoChoicePerson` 双发仅供旧调用方（`popupWindows.vue`、`form/processFlow/index.vue` 及拷贝）零改动恢复；本期未迁移这些调用方。
 
 ### 审批页（expense）— 次要子系统
 - **职责**：审批单/附件/流程/明细 4 页签。
 - **关键接口**：`api/expense/index.ts` getApproval/getAnnex/getFlow/getDetail/commitAudit/saveFlow；`hook.ts` `NodeIdea`(流程链)/`Data`(单条静态缓存)；`format.ts` `formatValue`/`M_calculate`(自实现四则运算，避浮点)。
 - **约束**：`eval('('+cfg.render+')')` 执行服务端渲染表达式；`getDetailSingle` 共享模块级 `let detail`。
+
+### 上传 / 附件（components/upload）— P3 传输就绪；form.vue 已接入（注入式传输 + APP 端支持）
+- **职责**：移动端「附件」上传的渲染与交互外壳，对齐 PC 端 creatpage（**组件级附件面板，非 WebControl 字段控件**）。支持图片/视频/3D模型/通用文件 4 类（`config.Type` 区分）。**渲染与传输彻底解耦（注入式）**。
+- **关键接口**：
+  - `components/upload/upload.vue`：单分类 widget。Props `config`(Pub_FileConfig 行)/`showUploadButton`/`showDelButton`/`readonly`/`iconBase`/`onUpload?`/`onDelete?`；`defineModel<any[]>` 绑定展示文件数组（`{OID,FilePath,FileName,FileType}`）。按 Type 分发 `uni.chooseImage/chooseVideo/chooseFile`；图片走 `uni.previewImage`。传 `onUpload` 走真实传输，传 `onDelete` 走真实删除请求，不传走 MOCK。
+  - `components/upload/uploadService.ts`：可复用上传函数层（纯函数，不依赖组件上下文）。导出 `uploadFile`(主入口)、`createInfo`、`calculateHash`、`createFormData`、`uploadChunk`(H5)、`uploadByUniUploadFile`(APP)、`fetch`、`getFilePath`、`deleteFile`。端点通过 `getUrlType()` 动态获取，不再硬编码。
+  - `components/upload/fileUpload.vue`：多分类面板（demo 用；autopage 单分类暂直用 `upload.vue`）。移植 A 的 `showFileUpload`/`showFileType`/`showUploadButton`/`showDelButton`/`flowNodeReq`。
+  - `components/upload/fileType.ts`：`BasicTypeList`/`getTypeList`/`getFileType`/`isImageExt`/`buildAccept`/`getFileIconUrl`（内联，避免 import H5-only 的 fileView.js）。
+  - demo：`pages/subPackages/uploadDemo/index.vue`（路由 `pages/subPackages/uploadDemo/index`，默认导航栏，MOCK 传输）。
+  - autopage 接入：`pages/subPackages/autopage/components/modules/form/form.vue` 模板用 `<upload :onUpload="handleUpload" :onDelete="handleDelete">`；`handleUpload` 调用 `uploadService.uploadFile`；`handleDelete` 调用 `uploadService.deleteFile` + store 同步。
+- **约束 / 现状**：
+  - **跨端传输**：H5 走 MD5 + 5MB 分块 + XHR 上传；APP/MP 走 `uni.uploadFile` 整文件上传（`#ifdef H5 / #ifndef H5` 条件编译）。demo 默认 MOCK（无 `onUpload`）。
+  - form.vue 既有缺陷已修：`annexConfig[2]` 空值崩溃（改 `annexConfigRow` computed + `?.`）、上传项不显示（原 push 到 computed 瞬态数组，现 v-model `data.annex`）。
+  - `data.annex` 无服务端预载（autopage 数据层只设 `annexConfig`）；附件列表进页为空，仅显示会话内上传。预载属 P4。
+  - 未接 autopage 多分类：`control/index.ts` 未注册上传类型（A 上传非字段控件）；多分类面板 P4 接入。
+  - 复用 `generateUUID`(`@/utils`)、`deepClone`(`@/utils/index.ts`)、`http_request`(`@/api/api.js`)、`useModulesStore`。
+- **store 补全**：`useModulesStore`(id=`'moudles'`) 新增 `removeFileData/getFileData/setFileData/removeCurrentData/getCurrentData/setCurrentData`，对齐 PC 端 A 的 `saveModel.ts`。
+- **待办**：P4 autopage 加载 `Pub_FileConfig`/`Pub_BusinessFile` 预载 + 多分类面板（`fileUpload.vue`）；P5 版本控制「创建时冻结」。
+- **待清理**：`components/publicForm/formPictrue.vue` 孤儿 `up-upload` 组件。
 
 ## 关键约束与设计决策
 - **配置即代码**：服务端 DB 存 JS（`Sys_DynamicCode.JSCode`、`FieldFunc`、`cfg.render`、`config.title`）→ 前端 `new Function/eval` 执行。这是低代码平台的核心，也是最大注入面。
@@ -79,3 +99,14 @@
 - **深链**：`gzhr://pages/...`（APP）与 H5 `splash?redirect=<base64>`（中转页 `pages/Guide/splash.vue`）；`redirect` 必须 base64。
 - **平台条件编译**：`#ifdef H5 / APP-PLUS / MP-WEIXIN`（App.vue、login.vue）。
 - **零单测**：`package.json scripts.test` 为占位；无测试目录。
+
+### 事项列表组件（components/index/index.vue）
+- **职责**：展示待办/已办/待阅/已阅列表卡片，支持下拉刷新和上拉加载
+- **关键接口**：`goShowInfoOn(item)` 点击跳转、`getData()` 请求数据、`setTitleCategory/item` 等格式化函数
+- **约束**：`naviId` 由 `tabIndex + 1` 计算，1=待办、2=已办、3=待阅、4=已阅
+- **数据更新**：`getData()` 请求成功后更新父组件传入的 `tabsList[0].count`（待办总数）和 `tabsList[2].count`（待阅总数）
+
+### Tab导航组件（pages/index/items.vue）
+- **职责**：展示四个Tab页签（待办/已办/待阅/已阅），管理滑动切换
+- **角标功能**：使用 `up-badge` 组件在Tab右上角显示数量角标，超过99显示"99+"
+- **数据来源**：角标数据来自 `tabsList[i].count`，由子组件 `index.vue` 更新
