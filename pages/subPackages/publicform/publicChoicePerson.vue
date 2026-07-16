@@ -232,8 +232,8 @@
 		// 3. 【核心修改】处理回显数据
 		const eventChannel = proxy.getOpenerEventChannel();
 		if (eventChannel) {
-			// 监听 'acceptDataFromOpener' 事件
-			eventChannel.on('acceptDataFromOpener', (data) => {
+			// 回显处理：新契约 acceptDataFromOpener 与旧契约 echoChoicePerson 复用同一 handler
+			const applyEcho = (data) => {
 				// console.log("子页面接收到的回传数据：", data);
 
 				// 容错处理：确保 data 是个数组
@@ -280,7 +280,9 @@
 					// 更新一下全选状态判定
 					// (由于 isAllSelectedInLevel 是 computed，它会自动更新，无需手动处理)
 				}
-			});
+			};
+			eventChannel.on('acceptDataFromOpener', applyEcho);
+			eventChannel.on('echoChoicePerson', applyEcho);
 		}
 	});
 
@@ -622,21 +624,23 @@
 			};
 		});
 
-		// 2. 构造“类数组对象”，将指定 Key 的值拼成逗号分隔字符串挂载到数组对象上
-		const result = [...itemsArray];
-		const keys = ['OID', 'UOID', 'Name', 'DeptOID', 'OrgOID', 'PostOID', 'PostName', 'DeptName', 'OrgName'];
-
-		keys.forEach(key => {
-			result[key] = itemsArray.map(item => {
+		// 2. 构造 mergeData：全字段列转置（对齐 PC 端 A 的 { data, mergeData } 契约）
+		//    null/undefined -> '' 占位，保证每个字段数组长度 = 选中数量；radio 单选时长度 1，join 无逗号（与 A 一致）
+		const mergeData = {};
+		['OID', 'UOID', 'Name', 'type', 'checked', 'UserOID', 'DeptOID', 'OrgOID',
+			'PostOID', 'PostName', 'DeptName', 'OrgName', 'MobilePhone', 'Name_All', 'id', 'path'
+		].forEach(key => {
+			mergeData[key] = itemsArray.map(item => {
 				const val = item[key];
-				// 关键：即使值为空，也保留空字符串，确保逗号分隔的数量与数组长度一致
-				return (val === null || val === undefined) ? '' : String(val);
-			}).join(',');
+				return (val === null || val === undefined) ? '' : val;
+			});
 		});
 
 		const eventChannel = proxy.getOpenerEventChannel();
-		// 将选中数据回传给父页面
-		eventChannel.emit('acceptDataFromChild', result);
+		// 3. 双发回传：新契约 { data, mergeData }（choosePage 控件 + audit）；兼容旧契约纯数组（popupWindows/processFlow 等旧调用方）
+		//    uni 事件通道为 key->handler 映射，未注册的事件名静默丢弃，故双发不污染只监听新契约的调用方
+		eventChannel.emit('acceptDataFromChild', { data: itemsArray, mergeData });
+		eventChannel.emit('ChoicePerson', itemsArray);
 		uni.navigateBack();
 	}
 </script>

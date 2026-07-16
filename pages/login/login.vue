@@ -37,10 +37,10 @@
 
 					<!-- 一键登录, 除了H5 -->
 					<!-- #ifndef H5 -->
-					<button class="action_Btn"
+					<!-- <button class="action_Btn"
 						style="height: 100%;background-color: transparent;margin: 0;font-size: 32rpx;color: #544e4e;"
 						open-type="getPhoneNumber" @getphonenumber="getInto"><text>一键登录</text>
-					</button>
+					</button> -->
 					<!-- #endif -->
 				</view>
 

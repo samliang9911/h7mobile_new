@@ -264,7 +264,7 @@
 				events: {
 					acceptDataFromChild: function (data : any) {
 						// console.log('父页面接收到回传数据:', data);
-						resolve(data || []);
+						resolve((data && data.data) || data || []);
 					}
 				},
 				success: (res) => {

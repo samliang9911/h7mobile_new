@@ -109,6 +109,26 @@ export const useModulesStore = defineStore({
 		    this.fileModules[key].push(data)
 		  }
 		},
+		removeFileData(key, oid) {
+		  if (!this.fileModules[key]) return
+		  this.fileModules[key] = this.fileModules[key].filter((item: any) => item.Id !== oid)
+		},
+		getFileData(key) {
+		  return this.fileModules[key] || []
+		},
+		setFileData(key, data) {
+		  this.fileModules[key] = data
+		},
+		removeCurrentData(key, oid) {
+		  if (!this.curModules[key]) return
+		  this.curModules[key] = this.curModules[key].filter((item: any) => item.OID !== oid && item[key + 'OID'] !== oid)
+		},
+		getCurrentData(key) {
+		  return this.curModules[key] || []
+		},
+		setCurrentData(key, data) {
+		  this.curModules[key] = data
+		},
 	}
 	
 })

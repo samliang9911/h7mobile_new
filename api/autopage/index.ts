@@ -42,7 +42,7 @@ export const getComponent = (Dev_PageConfigOID) => {
 			],
 			"wh": {
 				"Filter": "T1.Dev_PageConfig_FK = {OID}",
-				"Param": { "OID": "ef5641e1-5eb4-4ae5-81bb-930253611dfe" }
+				"Param": { "OID": Dev_PageConfigOID }
 			},
 			"n_ob": "Sort",
 			"tol": 1000
@@ -403,7 +403,7 @@ const Layout = {
 	vertical(e, extend) {
 		const dataApiList = Array.isArray(e[5]) ? e[5] : [];
 
-		return e[1]
+		return e[1].Dev_PageComponent
 			.sort((a, b) => a.Sort - b.Sort)
 			.map(o => {
 				// 1. 过滤 dataApi
@@ -434,7 +434,7 @@ const Layout = {
 	},
 	/**子表水平 */
 	childLevel(e, extend) {
-		const mainComp = e[1].find(o => !o.MC_Key || o.MC_Key == '00000000-0000-0000-0000-000000000000')
+		const mainComp = e[1].Dev_PageComponent.find(o => !o.MC_Key || o.MC_Key == '00000000-0000-0000-0000-000000000000')
 		let main = [cleansData({
 			extend,
 			formConfig: e[2],
@@ -442,7 +442,7 @@ const Layout = {
 			component: mainComp,
 			dataApi: e[5].filter(u => mainComp.Dev_PageComponentOID == u.BusinessKey)
 		})]
-		let child = e[1].filter(o => o.MC_Key && o.MC_Key != '00000000-0000-0000-0000-000000000000').sort((a, b) =>
+		let child = e[1].Dev_PageComponent.filter(o => o.MC_Key && o.MC_Key != '00000000-0000-0000-0000-000000000000').sort((a, b) =>
 			a.Sort - b.Sort).map(o => cleansData({
 				extend,
 				formConfig: e[2],

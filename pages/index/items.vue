@@ -30,9 +30,10 @@
 										<view v-for="(tab,i) in tabsList"
 											:style="current === i ? 'color:#131313;' : 'color:#606266;'"
 											class="tabBakcground tabLeft" @click="current = i">
-											<up-badge type="error" :count="tabsList[i]['count']" :show-zero="false"
-												:offset="[5, 30]"></up-badge>
 											<text>{{tab.name}}</text>
+											<view v-if="(i === 0 || i === 2) && tabsList[i]['count'] > 0" class="tabBadge">
+												{{ tabsList[i]['count'] > 99 ? '99+' : tabsList[i]['count'] }}
+											</view>
 										</view>
 										<view id="track" :class="['tabBakcgroundMove', startUserColor]"
 											:style="{left: `calc(${ LineLeft}px - 120rpx)`}">
@@ -44,7 +45,8 @@
 									<swiper-item v-for="(_,i) in tabsList">
 										<index :ref="`index${i}`" :tabIndex="i" :current="current"
 											:searchData="searchData" :tabsList="tabsList"
-											:showSearchANDTabs="showSearchANDTabs"></index>
+											:showSearchANDTabs="showSearchANDTabs"
+											@update-tab-count="handleUpdateTabCount"></index>
 									</swiper-item>
 								</swiper>
 							</view>
@@ -72,6 +74,10 @@
 		{ name: '待阅', count: 0 },
 		{ name: '已阅', count: 0 }
 	]);
+
+	const handleUpdateTabCount = ({ index, count }) => {
+		tabsList.value[index].count = count;
+	};
 	const trackLeft = ref(0); // 滑块静止时的偏移量
 	const swiperDx = ref(0); // 轮播图滚动时的距离
 	const screenWidth = ref(0); // 可视宽度
@@ -198,6 +204,22 @@
 									color: #606266;
 									font-size: 35rpx;
 									position: relative;
+								}
+
+								.tabBadge {
+									position: absolute;
+									top: 5rpx;
+									right: -0.4125rpx;
+									min-width: 36rpx;
+									height: 36rpx;
+									padding: 0 10rpx;
+									background-color: #f56c6c;
+									color: #fff;
+									font-size: 22rpx;
+									border-radius: 18rpx;
+									display: flex;
+									align-items: center;
+									justify-content: center;
 								}
 
 								.tabBakcgroundMove {

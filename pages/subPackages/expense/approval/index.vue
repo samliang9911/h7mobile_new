@@ -151,7 +151,9 @@
 	}		  
 			getParamsUsingURL()   
 	const openCode = () => {
-		//console.log('data.value',data.value)
+		
+		
+
 		if (data.value?.isCodeLink !== true && data.value?.isCodeLink !== 'true') return
 		const code = data.value?.code
 		const title = data.value?.title

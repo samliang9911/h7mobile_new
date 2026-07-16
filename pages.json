@@ -227,6 +227,16 @@
 			}]
 		},
 		{
+			"root": "pages/subPackages/uploadDemo",
+			"pages": [{
+				"path": "index",
+				"style": {
+					"navigationBarTitleText": "上传Demo",
+					"enablePullDownRefresh": false
+				}
+			}]
+		},
+		{
 			"root": "pages/subPackages/expense/detail",
 			"pages": [{
 				"path": "rotateTable",

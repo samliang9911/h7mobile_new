@@ -36,23 +36,41 @@ const chooseFrame = () => {
   uni.navigateTo({
     url,
     events: {
-      ChoicePerson(res) {
+      // 事件名对齐子页 publicChoicePerson 的 emit（修复原 ChoicePerson 断链）
+      acceptDataFromChild(payload) {
         // 【回调触发前】返回 false 阻止值改变
+        // data 保持为数组(payload.data) 透传给自定义代码(form.vue onChangeBefore)，写回则消费 mergeData（对齐 PC 端 A 契约）
         emit('onChangeBefore',{
-          data:res,
+          data: payload && payload.data !== undefined ? payload.data : payload,
           callback(change){
             if(!change)return;
+            const md = (payload && payload.mergeData) || {}
             storedValueField.forEach((e,i)=>{
-              formData[e] = res.reduce((a,b)=>a+=(b[returnValueField[i]]||'')+',','').replace(/,$/,'')
+              const f = String(returnValueField[i]||'').split('.').pop()  // 对齐 A 的 T1.xxx 前缀截取
+              const arr = md[f] || []
+              formData[e] = arr.map(v => v == null ? '' : String(v)).join(',')
             })
           }
         })
       }
     },
-    success() {
-      //回显数据中必须包含主键OID
-      // let echo = item.xuanrenArr.filter(f => f.checked).map(e=> ({...e,OID:e.ExecutorOID}) );
-      // res.eventChannel.emit('echoChoicePerson', echo)
+    success(res: any) {
+      // 回显：按 storedValueField/returnValueField 中尾字段为 OID/UOID 的锚点反推选中项
+      const idx = storedValueField.findIndex((_, i) => {
+        const t = String(returnValueField[i]||'').split('.').pop()
+        return t === 'OID' || t === 'UOID'
+      })
+      const items = [] as any[]
+      if (idx >= 0) {
+        const tail = String(returnValueField[idx]).split('.').pop()
+        String(formData[storedValueField[idx]] || '').split(',').filter(Boolean).forEach(v => {
+          const it: any = { OID: v, type: 'Person' }
+          if (tail === 'UOID') it.UOID = v
+          items.push(it)
+        })
+      }
+      // 无主键锚点时 items 为空，子页打开无预选（不报错）
+      res.eventChannel.emit('acceptDataFromOpener', { items })
     }
   });
 }
